@@ -1,0 +1,47 @@
+site_name: moretyping
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - src
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - tables
+  - toc:
+      permalink: true
+
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: index.md
+
+  - Data:
+      - Overview: data/index.md
+      - moretyping.data:
+          - Number: data/number.md
+
+  - Visualise:
+      - Overview: visualise/index.md
+      - moretyping.vis:
+          - VisLink: visualise/vis-link.md
+          - ViewJSON: visualise/view-json.md
