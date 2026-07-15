@@ -1,5 +1,5 @@
 [project]
-name = "moretyping"
+name = "stlib-ext"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -15,3 +15,10 @@ github = [
     "mkdocs-material>=9.7.6",
     "mkdocstrings[python]>=1.0.5",
 ]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = ["moretyping"]

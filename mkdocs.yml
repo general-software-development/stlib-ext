@@ -1,4 +1,4 @@
-site_name: moretyping
+site_name: stlib-ext
 
 theme:
   name: material
@@ -35,13 +35,20 @@ markdown_extensions:
 nav:
   - Home: index.md
 
-  - Data:
-      - Overview: data/index.md
-      - moretyping.data:
-          - Number: data/number.md
+  - moretyping:
+    - Home: moretyping/index.md
+    - Data:
+        - Overview: moretyping/data/index.md
+        - moretyping.data:
+            - Number: moretyping/data/number.md
 
-  - Visualise:
-      - Overview: visualise/index.md
-      - moretyping.vis:
-          - VisLink: visualise/vis-link.md
-          - ViewJSON: visualise/view-json.md
+    - Visualise:
+        - Overview: moretyping/visualise/index.md
+        - moretyping.vis:
+            - VisLink: moretyping/visualise/vis-link.md
+            - ViewJSON: moretyping/visualise/view-json.md
+
+  - morefunctools:
+    - Home: morefunctools/index.md
+    - API:
+      - morefunctools.experimental: morefunctools/experimental.md
