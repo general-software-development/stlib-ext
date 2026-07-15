@@ -1,6 +1,6 @@
 [project]
 name = "stlib-ext"
-version = "0.1.0"
+version = "0.1.0-post1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -21,4 +21,5 @@ requires = ["uv_build"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
-module-name = ["moretyping"]
+module-name = ["moretyping", "morefunctools", "stlib_ext"]
+module-root = "src"
