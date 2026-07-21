@@ -1175,8 +1175,13 @@
 
 <h1 id="morefunctoolsexperimental">morefunctools.experimental<a class="headerlink" href="#morefunctoolsexperimental" title="Permanent link">&para;</a></h1>
 <h2 id="annotations">Annotations<a class="headerlink" href="#annotations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="nd">@experimental</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fifo_cache</span><span class="p">(</span><span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="nd">@overload</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fifo_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="p">:</span> <span class="n">MaxSize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <dl>
@@ -1200,10 +1205,6 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">cache_entries</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="o">...</span>
 </code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning &mdash; Usage</p>
-<p>Please note that <code>@fifo_cache()</code> needs to be used with parantheses. It will not work otherwise.</p>
-</div>
 <h2 id="example-usage">Example usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">morefunctools.cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">fifo_cache</span>
 
