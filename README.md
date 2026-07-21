@@ -4,9 +4,11 @@
 ## Contents
 
 1. **MoreTyping**
+
 &emsp;**MoreTyping** adds plenty more python types, for both type annotations and real-world use.<br><br>
 
 2. **MoreFuncTools**
+
 &emsp;**MoreFuncTools** adds general QoL utility features for functions.
 
 ## Documentation
