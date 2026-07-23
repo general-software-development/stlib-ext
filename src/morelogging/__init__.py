@@ -27,7 +27,7 @@ class Log(BaseModel):
     @classmethod
     def check_message(cls, value: str, info: ValidationInfo):
         if not isinstance(value, str):
-            if isinstance(value, (BaseException, Warning)) and level in {LogLevel.ERROR, LogLevel.CRITICAL}:
+            if isinstance(value, (BaseException, Warning)) and info.data.get("level") in {LogLevel.ERROR, LogLevel.CRITICAL}:
                 pass
             else:
                 raise TypeError("Log message is an Exception/Warning, but the log level isnt LogLevel.ERROR or LogLevel.CRITICAL")
