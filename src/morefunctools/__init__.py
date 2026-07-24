@@ -1,7 +1,7 @@
 from typing import Any
 import warnings
 
-def importDefaults(module) -> dict[str, Any]:
+def importDefaults(module: Any) -> dict[str, Any]:
     if not hasattr(module, "__defaults__"):
         return {}
     vals = {}

@@ -1,4 +1,4 @@
-import uuid
+import uuid as uuidlib
 from functools import cached_property
 import hashlib
 import warnings
@@ -8,7 +8,9 @@ from collections.abc import Iterable
 from pydantic import BaseModel, field_validator, ValidationInfo
 from enum import Enum
 from morefunctools import NotImplemented, notimplemented
+from moretyping.meta import Unknown
 import sys
+from copy import deepcopy
 
 class LogLevel(str, Enum):
     DEBUG = "DEBUG"
@@ -29,7 +31,7 @@ class Log(BaseModel):
 
     @field_validator("message")
     @classmethod
-    def check_message(cls, value: str, info: ValidationInfo):
+    def check_message(cls, value: str | Any, info: ValidationInfo) -> str:
         if not isinstance(value, str):
             if isinstance(value, (BaseException, Warning)) and info.data.get("level") in {LogLevel.ERROR, LogLevel.CRITICAL}:
                 pass
@@ -39,19 +41,22 @@ class Log(BaseModel):
             if len(value) == 0:
                 raise ValueError(f"Log message is an empty string ('{value}')")
 
-        return value
+        return str(value)
 
     @field_validator("objects")
     @classmethod
-    def check_objects(cls, value: Iterable[Any]) -> tuple[Any]:
+    def check_objects(cls, value: Iterable[Any]) -> tuple[Any, ...] | tuple:
         if not value:
             return tuple()
-        return tuple(value)
+        return tuple(map(lambda x: deepcopy(x), value))
 
 class LogHandler(ABC):
+    name: str
+    uuid: str
+
     def __init__(self) -> None:
         self.__dict__['name'] = f"<{self.__class__.__name__} instance at 0x{hex(id(self))}>"
-        self.__dict__['uuid'] = uuid.uuid4().hex
+        self.__dict__['uuid'] = uuidlib.uuid4().hex
         self._connect_hook: list[Any] | None = None
         self._position = 0
 
@@ -59,7 +64,7 @@ class LogHandler(ABC):
 
     @cached_property
     def identifier(self) -> str:
-        return hashlib.sha3_512(str((self.name, self.uuid)).encode('utf8'))
+        return hashlib.sha3_512(str((self.name, self.uuid)).encode('utf8')).hexdigest()
 
     @abstractmethod
     @notimplemented(NotImplemented.Abstract)
@@ -97,10 +102,10 @@ class LogHandler(ABC):
         self.commit(self.format(log))
         self._position += 1
 
-    def _connect(self, data) -> None:
+    def _connect(self, data: list[Log]) -> None:
         self._connect_hook = data
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Unknown) -> None:
         if name in {'name', 'uuid'}:
             raise RuntimeError(f"Attempted to modify immutable property LogHandler.{name} to '{value}'.")
         self.__dict__[name] = value
@@ -119,15 +124,18 @@ class SimpleLogHandler(LogHandler):
         sys.stdout.flush()
 
 class LogStream:
+    name: str
+    uuid: str
+
     def __init__(self, name: str) -> None:
         self.__dict__["name"] = name
-        self.__dict__["uuid"] = uuid.uuid4().hex
-        self.data = []
-        self.handlers = {}
+        self.__dict__["uuid"] = uuidlib.uuid4().hex
+        self.data: list[Log] = []
+        self.handlers: dict[str, LogHandler] = {}
 
     @cached_property
     def identifier(self) -> str:
-        return hashlib.sha3_512(str((self.name, self.uuid)))
+        return hashlib.sha3_512(str((self.name, self.uuid)).encode('utf8')).hexdigest()
 
     def add_handler(self, handler: LogHandler) -> str:
         handler._connect(self.data)
@@ -142,12 +150,12 @@ class LogStream:
         else:
             raise KeyError(f"Attempted to remove handler with identifier {handler_id} form log stream {self.name} ({self.identifier}), meanwhile {handler_id} was not found.")
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Unknown) -> None:
         if name in {'name', 'uuid'}:
             raise RuntimeError(f"Attempted to modify immutable property {self.__class__.__name__}.{name} to '{value}'.")
         self.__dict__[name] = value
 
-    def _add_item(self, item: list) -> None:
+    def _add_item(self, item: Log) -> None:
         self.data.append(item)
         for handler in self.handlers.values():
             handler._push(item)

@@ -2,6 +2,7 @@ from enum import Enum, auto
 from typing import Any, Callable, Optional, overload
 from functools import wraps
 from warnings import warn
+from moretyping.meta import Unknown
 
 class NotImplementedWarning(Warning):
     ...
@@ -13,14 +14,14 @@ class NotImplemented(Enum):
     Default = auto()
 
 @overload
-def notimplemented(enumtype: NotImplemented = NotImplemented.Default, message: Optional[str] = None) -> Callable[[Callable], Callable]:
+def notimplemented(enumtype: NotImplemented = NotImplemented.Default, /, message: Optional[str] = None) -> Callable[[Callable], Callable]:
     ...
 
 @overload
-def notimplemented(fn: Callable) -> Callable:
+def notimplemented(fn: Callable, /) -> Callable:
     ...
 
-def notimplemented(function_or_enumtype: NotImplemented | Callable = NotImplemented.Default, message: Optional[str] = None):
+def notimplemented(function_or_enumtype: NotImplemented | Callable = NotImplemented.Default, message: Optional[str] = None) -> Callable:
     function = None
     enumtype = None
     if callable(function_or_enumtype):
@@ -30,7 +31,7 @@ def notimplemented(function_or_enumtype: NotImplemented | Callable = NotImplemen
         enumtype = function_or_enumtype
         function = None
 
-    def runBehaviour(fn: Callable, *args, **kwargs) -> Any:
+    def runBehaviour(fn: Callable, *args: Unknown, **kwargs: Unknown) -> Any:
         if enumtype is NotImplemented.Abstract:
             raise NotImplementedError(f"{fn.__qualname__} is an abstract method, and therefore not implemented.")
         elif enumtype is NotImplemented.Development:
@@ -47,14 +48,14 @@ def notimplemented(function_or_enumtype: NotImplemented | Callable = NotImplemen
     if function is None:
         def decorator(fn: Callable) -> Callable:
             @wraps(fn)
-            def wrapper(*args, **kwargs) -> Any:
+            def wrapper(*args: Unknown, **kwargs: Unknown) -> Any:
                 return runBehaviour(fn, *args, **kwargs)
 
             return wrapper
         return decorator
     else:
         @wraps(function)
-        def wrapper(*args, **kwargs) -> Any:
+        def wrapper(*args: Unknown, **kwargs: Unknown) -> Any:
             return runBehaviour(function, *args, **kwargs)
         return wrapper
     

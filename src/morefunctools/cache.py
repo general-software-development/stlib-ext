@@ -3,11 +3,12 @@ from functools import lru_cache
 from functools import wraps
 from typing import Any, overload
 from collections.abc import Callable
-from moretyping.visualise import VisLink
+from moretyping.meta import Unknown
 from .pyexperimental import experimental
 from collections import deque
+import warnings
 
-type MaxSize = int | bool
+type MaxSize = int | bool | float
 
 class CacheInfo:
     def __init__(self, *, hits: int, misses: int, maxsize: MaxSize, currsize: int) -> None:
@@ -20,7 +21,7 @@ class CacheInfo:
     def lock(self) -> None:
         self.locked = True
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Unknown) -> None:
         if self.locked == False:
             self.__dict__[name] = value
         else:
@@ -42,27 +43,38 @@ def fifo_cache(maxsize: MaxSize | Callable = True) -> Callable[[Callable], Calla
     if isinstance(maxsize, bool):
         maxsize = math.inf if maxsize else 1
 
-    def decorator(function: Callable):
-        cache = {}
-        cacheList = deque()
+    realmaxsize: int | float
+    if maxsize == True:
+        realmaxsize = math.inf
+    elif callable(maxsize):
+        realmaxsize = math.inf
+    else:
+        realmaxsize = int(maxsize)
+    if isinstance(maxsize, int) and maxsize <= 0:
+        warnings.warn(f"Invalid fifo_cache maxsize: {maxsize}")
+    
+
+    def decorator(function: Callable) -> Callable:
+        cache: dict[str, Any] = {}
+        cacheList: deque = deque()
 
         hits, misses = 0, 0
 
         def cache_clear() -> None:
-            global cache, cacheList
+            nonlocal cache, cacheList
             cache = {}
             cacheList = deque()
 
         def cache_info() -> CacheInfo:
-            info = CacheInfo(hits = hits, misses = misses, maxsize = maxsize, currsize = len(cache.keys()))
+            info = CacheInfo(hits = hits, misses = misses, maxsize = realmaxsize, currsize = len(cache.keys()))
             info.lock()
             return info
         
-        def cache_entries() -> tuple[*tuple[Any, Any]]:
+        def cache_entries() -> tuple[tuple[Any, Any], ...]:
             return tuple(cache.items())
 
         @wraps(function)
-        def wrapper(*args, **kwargs) -> Any:
+        def wrapper(*args: Unknown, **kwargs: Unknown) -> Any:
             nonlocal hits, misses
             key = str((args, tuple(kwargs.items())))
             if key in cache.keys():
@@ -76,15 +88,15 @@ def fifo_cache(maxsize: MaxSize | Callable = True) -> Callable[[Callable], Calla
             cache[key] = value
 
             # Remove cache items to reduce size usage
-            if len(cacheList) > maxsize:
+            if len(cacheList) > realmaxsize:
                 removalKey = cacheList.popleft()
                 cache.pop(removalKey)
 
             return value
         
-        wrapper.cache_clear = cache_clear
-        wrapper.cache_info = cache_info
-        wrapper.cache_entries = cache_entries
+        setattr(wrapper, "cache_clear", cache_clear)
+        setattr(wrapper, "cache_info", cache_info)
+        setattr(wrapper, "cache_entries", cache_entries)
 
         return wrapper
     

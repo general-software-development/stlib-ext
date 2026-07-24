@@ -1,0 +1,14 @@
+FROM ghcr.io/astral-sh/uv:latest AS uv
+FROM debian:bookworm-slim AS project-tree
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+RUN mkdir -p /host
+COPY .. /host
+
+COPY --from=uv /uv /uvx /bin/
+
+FROM project-tree AS build
+
+WORKDIR /host
+RUN uv sync -v --color always --python 3.13 --compile-bytecode --locked --group dev

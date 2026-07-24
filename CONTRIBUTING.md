@@ -42,8 +42,20 @@ Use type annotations wherever possible. Example: `collections.abc.Callable`, `ty
 
 ## 3: Tests
 
-Always write tests for your code. You can run the tests with `python -m tests` (or, alternatively, `pytest -vv`).
+Always write tests for your code. You can run the tests with `scripts/execute.py tests`. This requires Docker. If you don't have Docker installed, you can also run `python -m tests`.
 
-# 6. Contributors
+# 6. More Information
+
+## A. Development scripts
+
+### scripts/execute.py
+
+Available commands:
+* `tests`: Runs all tests
+* `clear-docker`: Deletes all docker containers and images from storage
+* `clean`: Removes unnecessary local files
+* `clean-ultra`: Removes unnecessary local files, unused docker containers, prunes the uv cache, and prunes dangling docker containers
+
+# 7. Contributors
 
 1. [@cornusandu](https://github.com/cornusandu)
