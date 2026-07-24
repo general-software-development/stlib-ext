@@ -15,3 +15,5 @@ from . import cache
 from . import pyexperimental as exp
 
 globals().update(importDefaults(exp))
+
+from .notimplemented import notimplemented, NotImplemented

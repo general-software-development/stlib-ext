@@ -1,4 +1,4 @@
-from tests.base import _TestSuite, static_mark_parametrize
+from base import _TestSuite, static_mark_parametrize
 import moretyping
 import pytest
 
