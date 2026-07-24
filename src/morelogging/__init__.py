@@ -7,6 +7,8 @@ from typing import Any, Optional
 from collections.abc import Iterable
 from pydantic import BaseModel, field_validator, ValidationInfo
 from enum import Enum
+from morefunctools import NotImplemented, notimplemented
+import sys
 
 class LogLevel(str, Enum):
     DEBUG = "DEBUG"
@@ -58,20 +60,24 @@ class LogHandler(ABC):
         return hashlib.sha3_512(str((self.name, self.uuid)).encode('utf8'))
 
     @abstractmethod
+    @notimplemented(NotImplemented.Abstract)
     def format(self, log: Log) -> str:
-        raise NotImplementedError("LogHandler(ABC).format is an abstract method and not implemented.")
+        ...
 
     @abstractmethod
+    @notimplemented(NotImplemented.Abstract)
     def commit(self, log: str) -> None:
-        raise NotImplementedError("LogHandler(ABC).commit is an abstract method and not implemented.")
+        ...
 
     @abstractmethod
+    @notimplemented(NotImplemented.Abstract)
     def open(self) -> None:
-        raise NotImplementedError("LogHandler(ABC).open is an abstract method and not implemented.")
+        ...
 
     @abstractmethod
+    @notimplemented(NotImplemented.Abstract)
     def close(self) -> None:
-        raise NotImplementedError("LogHandler(ABC).close is an abstract method and not implemented.")
+        ...
 
     def update(self) -> None:
         if self._connect_hook is None:
@@ -99,6 +105,12 @@ class SimpleLogHandler(LogHandler):
 
     def commit(self, log: str) -> None:
         print(log)
+
+    def open(self) -> None:
+        pass
+
+    def close(self) -> None:
+        sys.stdout.flush()
 
 class LogStream:
     def __init__(self, name: str) -> None:
