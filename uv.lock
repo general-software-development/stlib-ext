@@ -735,6 +735,7 @@ name = "stlib-ext"
 version = "0.3.0a1"
 source = { editable = "." }
 dependencies = [
+    { name = "colorama" },
     { name = "pydantic" },
 ]
 
@@ -750,7 +751,10 @@ github = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pydantic", specifier = ">=2.13.4" }]
+requires-dist = [
+    { name = "colorama", specifier = ">=0.4.6" },
+    { name = "pydantic", specifier = ">=2.13.4" },
+]
 
 [package.metadata.requires-dev]
 dev = [

@@ -11,6 +11,7 @@ from morefunctools import NotImplemented, notimplemented
 from moretyping.meta import Unknown
 import sys
 from copy import deepcopy
+from moreshell import shell
 
 # TODO: Switch to something that lets users add new log levels
 class LogLevel(str, Enum):
@@ -111,11 +112,20 @@ class LogHandler(ABC):
             raise RuntimeError(f"Attempted to modify immutable property LogHandler.{name} to '{value}'.")
         self.__dict__[name] = value
 
-# TODO: Add coloring
-# TODO: Have this be the default handler for all loggers
 class SimpleLogHandler(LogHandler):
+    def __init__(self) -> None:
+        self.colors = {
+            LogLevel.DEBUG:     shell.color.FORE_WHITE  + shell.color.STYLE_DIM,
+            LogLevel.INFO:      shell.color.FORE_GREEN  + shell.color.STYLE_NORMAL,
+            LogLevel.WARNING:   shell.color.FORE_YELLOW + shell.color.STYLE_NORMAL,
+            LogLevel.ERROR:     shell.color.FORE_RED    + shell.color.STYLE_NORMAL,
+            LogLevel.CRITICAL:  shell.color.FORE_RED    + shell.color.STYLE_BRIGHT
+        }
+
+        super().__init__(self)
+
     def format(self, log: Log) -> str:
-        return f"{log.level.value} {log.message} {' '.join(map(lambda x: str(x), log.objects))}"
+        return f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level, "(invalid log level)")}{log.level.value} {log.message} {' '.join(map(lambda x: str(x), log.objects))}{shell.color.STYLE_RESET_ALLT}"
 
     def commit(self, log: str) -> None:
         print(log)
@@ -172,21 +182,25 @@ class LogStream:
         self._add_item(Log(level=level, message=message, objects=objects or []))
 
 class Logger:
-    @notimplemented
     def __init__(self, name: str) -> None:
-        ...
+        self.name = name
+        self.stream = LogStream(self.name)
 
-    @notimplemented
+        default_handler = SimpleLogHandler()
+        self.add_handler(default_handler)
+
+    @property
+    def identifier(self) -> str:
+        return self.stream.identifier
+
     def add_handler(self, handler: LogHandler) -> str:
-        ...
+        self.stream.add_handler(handler)
 
-    @notimplemented
     def remove_handler(self, handler_id: str) -> LogHandler:
-        ...
+        self.stream.remove_handler(handler_id)
 
-    @notimplemented
     def clear_handlers(self) -> list[LogHandler]:
-        ...
+        self.stream.clear_handlers()
 
     @notimplemented
     def log(self, level: LogLevel, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:

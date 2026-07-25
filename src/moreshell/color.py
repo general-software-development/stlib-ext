@@ -1,0 +1,45 @@
+from .common import AnsiCodes
+
+class Ansi(AnsiCodes):
+    FORE_BLACK  = 30
+    FORE_RED    = 31
+    FORE_GREEN  = 32
+    FORE_YELLOW = 33
+    FORE_BLUE   = 34
+    FORE_MAGENTA = 35
+    FORE_CYAN   = 36
+    FORE_WHITE  = 37
+    FORE_RESET  = 39
+    FORE_LIGHTBLACK_EX  = 90
+    FORE_LIGHTRED_EX    = 91
+    FORE_LIGHTGREEN_EX  = 92
+    FORE_LIGHTYELLOW_EX = 93
+    FORE_LIGHTBLUE_EX   = 94
+    FORE_LIGHTMAGENTA_EX = 95
+    FORE_LIGHTCYAN_EX   = 96
+    FORE_LIGHTWHITE_EX  = 97
+
+    BACK_BLACK   = 40
+    BACK_RED     = 41
+    BACK_GREEN   = 42
+    BACK_YELLOW  = 43
+    BACK_BLUE    = 44
+    BACK_MAGENTA = 45
+    BACK_CYAN    = 46
+    BACK_WHITE   = 47
+    BACK_RESET   = 49
+    BACK_LIGHTBLACK_EX   = 100
+    BACK_LIGHTRED_EX     = 101
+    BACK_LIGHTGREEN_EX   = 102
+    BACK_LIGHTYELLOW_EX  = 103
+    BACK_LIGHTBLUE_EX    = 104
+    BACK_LIGHTMAGENTA_EX = 105
+    BACK_LIGHTCYAN_EX    = 106
+    BACK_LIGHTWHITE_EX   = 107
+
+    STYLE_BRIGHT    = 1
+    STYLE_DIM       = 2
+    STYLE_NORMAL    = 22
+    STYLE_RESET_ALL = 0
+
+color = Ansi()
