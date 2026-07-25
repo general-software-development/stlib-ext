@@ -53,3 +53,15 @@ nav:
     - API:
       - morefunctools.experimental: morefunctools/experimental.md
       - morefunctools.fifo_cache: morefunctools/fifo-cache.md
+
+  - os_ext:
+    - Home: os_ext/index.md
+    - API:
+      - os_ext.details: os_ext/details.md
+  
+  - moreshell:
+    - Home: moreshell/index.md
+    - API:
+      - moreshell.color: moreshell/color.md
+      - moreshell.cursor: moreshell/cursor.md
+      - moreshell.details: moreshell/details.md
