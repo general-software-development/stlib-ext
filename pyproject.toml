@@ -25,7 +25,7 @@ requires = ["uv_build"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
-module-name = ["moretyping", "morefunctools", "stlib_ext"]
+module-name = ["moretyping", "morefunctools", "stlib_ext", "moreshell", "os_ext"]
 module-root = "src"
 
 [tool.pytest.ini_options]
