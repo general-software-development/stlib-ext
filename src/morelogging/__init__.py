@@ -12,6 +12,7 @@ from moretyping.meta import Unknown
 import sys
 from copy import deepcopy
 from moreshell import shell
+from dataclasses import dataclass
 
 # TODO: Switch to something that lets users add new log levels
 class LogLevel(str, Enum):
@@ -26,10 +27,15 @@ class ExperimentalWarning(Warning):
 
 warnings.warn("morelogging is experimental and incomplete. It is not ready to be used in production.", ExperimentalWarning)
 
+@dataclass
+class LogStreamInfo:
+    name: str
+
 class Log(BaseModel):
     level: LogLevel
     message: str
     objects: Iterable[Any] = tuple()
+    lsi: LogStreamInfo
 
     @field_validator("message")
     @classmethod
@@ -70,12 +76,12 @@ class LogHandler(ABC):
 
     @abstractmethod
     @notimplemented(NotImplemented.Abstract)
-    def format(self, log: Log) -> str:
+    def format(self, log: Log, lsi: LogStreamInfo) -> str:
         ...
 
     @abstractmethod
     @notimplemented(NotImplemented.Abstract)
-    def commit(self, log: str) -> None:
+    def commit(self, log: str, lsi: LogStreamInfo) -> None:
         ...
 
     @abstractmethod
@@ -87,6 +93,9 @@ class LogHandler(ABC):
     @notimplemented(NotImplemented.Abstract)
     def close(self) -> None:
         ...
+
+    def __del__(self):
+        self.close()
 
     def update(self) -> None:
         if self._connect_hook is None:
@@ -101,7 +110,7 @@ class LogHandler(ABC):
     def _push(self, log: Log) -> None:
         if not self.auto_run:
             return
-        self.commit(self.format(log))
+        self.commit(self.format(log, log.lsi), log, log.lsi)
         self._position += 1
 
     def _connect(self, data: list[Log]) -> None:
@@ -122,13 +131,26 @@ class SimpleLogHandler(LogHandler):
             LogLevel.CRITICAL:  shell.color.FORE_RED    + shell.color.STYLE_BRIGHT
         }
 
-        super().__init__(self)
+        self.lsi_name_color = shell.color.FORE_MAGENTA + shell.color.STYLE_BRIGHT
 
-    def format(self, log: Log) -> str:
-        return f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level, "(invalid log level)")}{log.level.value} {log.message} {' '.join(map(lambda x: str(x), log.objects))}{shell.color.STYLE_RESET_ALLT}"
+        super().__init__()
 
-    def commit(self, log: str) -> None:
-        print(log)
+    # TODO: Custom handling for LogLevel.Error and LogLevel.Critical
+    # TODO: Custom rendering for exceptions
+    def format(self, log: Log, lsi: LogStreamInfo) -> str:
+        return f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level)}" \
+                + f"[ {log.level.value.ljust(8, ":")} ]\t    " \
+                + f"{shell.color.STYLE_RESET_ALL}{self.lsi_name_color}{lsi.name}    " \
+                + shell.color.STYLE_RESET_ALL + self.colors.get(log.level) \
+                + f"{log.message} " \
+                + f"{' '.join(map(lambda x: str(x), log.objects))}{shell.color.STYLE_RESET_ALL}"
+
+    def commit(self, log: str, logi: Log, lsi: LogStreamInfo) -> None:
+        print(
+            log,
+            file=sys.stderr if logi.level in {LogLevel.ERROR, LogLevel.CRITICAL}
+                else sys.stdout
+        )
 
     def open(self) -> None:
         pass
@@ -179,7 +201,8 @@ class LogStream:
             handler._push(item)
 
     def log(self, level: LogLevel, message: str, *objects: Optional[Iterable[Any]]) -> None:
-        self._add_item(Log(level=level, message=message, objects=objects or []))
+        lsi = LogStreamInfo(name=self.name)
+        self._add_item(Log(level=level, message=message, objects=objects or [], lsi=lsi))
 
 class Logger:
     def __init__(self, name: str) -> None:
@@ -202,25 +225,22 @@ class Logger:
     def clear_handlers(self) -> list[LogHandler]:
         self.stream.clear_handlers()
 
-    @notimplemented
     def log(self, level: LogLevel, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
-        ...
+        self.stream.log(level, message, *objects)
 
-    @notimplemented
     def debug(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
-        ...
+        self.log(LogLevel.DEBUG, message, *objects)
 
-    @notimplemented
     def info(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
-        ...
+        self.log(LogLevel.INFO, message, *objects)
     
-    @notimplemented
+    
     def warning(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
-        ...
+        self.log(LogLevel.WARNING, message, *objects)
     
-    @notimplemented
+    
     def error(self, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
-        ...
+        self.log(LogLevel.ERROR, message, *objects)
     
     @notimplemented
     def critical(self, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
@@ -230,7 +250,7 @@ if __name__ == "__main__":
     if not __debug__:
         warnings.warn("This is a debug script.")
 
-    stream = LogStream("MyLogger")
-    handler = SimpleLogHandler()
-    stream.add_handler(handler)
+    stream = Logger("TestLogger")
     stream.log(LogLevel.DEBUG, "Test", "abc", None, {'a': 'bc'})
+    stream.log(LogLevel.INFO, "Test", "abc", None, {'a': 'bc'})
+    stream.log(LogLevel.CRITICAL, "Test", "abc", None, {'a': 'bc'})
