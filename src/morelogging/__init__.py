@@ -7,7 +7,7 @@ import warnings
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 from collections.abc import Iterable
-from pydantic import BaseModel, field_validator, ValidationInfo
+from pydantic import BaseModel, field_validator, ValidationInfo, ConfigDict
 from enum import Enum
 from morefunctools import NotImplemented, notimplemented
 from moretyping.meta import Unknown
@@ -35,11 +35,13 @@ class LogStreamInfo:
     name: str
 
 class Log(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     level: LogLevel
     message: str
     objects: Iterable[Any] = tuple()
     lsi: LogStreamInfo
-    exc_info: Optional[Exception]
+    exc_info: Optional[Exception] = None
 
     @field_validator("message")
     @classmethod
@@ -159,7 +161,7 @@ class SimpleLogHandler(LogHandler):
                 + f"{' '.join(map(lambda x: str(x), log.objects))}{shell.color.STYLE_RESET_ALL}"
 
         err_color = shell.color.STYLE_DIM
-        err = err_color + "\n" + traceback.format_exception(log.exc_info, limit=6).replace("\n", f"    {err_color}# ")
+        err = err_color + "\n" + '\n\n'.join(traceback.format_exception(log.exc_info, limit=6)).replace("\n", f"    {err_color}# ")
         return text + err + shell.color.STYLE_RESET_ALL
 
     def commit(self, log: str, logi: Log, lsi: LogStreamInfo) -> None:
@@ -259,7 +261,7 @@ class Logger:
     
     
     def error(self, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
-        self.log(LogLevel.ERROR, "" if isinstance(message, BaseException) else message, *objects,
+        self.log(LogLevel.ERROR, str(message) if isinstance(message, BaseException) else message, *objects,
                  exc_info=message if isinstance(message, BaseException) else None)
     
     @notimplemented
@@ -274,4 +276,7 @@ if __name__ == "__main__":
     stream.log(LogLevel.DEBUG, "Test", "abc", None, {'a': 'bc'})
     stream.log(LogLevel.INFO, "Test", "abc", None, {'a': 'bc'})
     stream.log(LogLevel.CRITICAL, "Test", "abc", None, {'a': 'bc'})
-    stream.error(Exception())
+    try:
+        raise Exception('test')
+    except Exception as e:
+        stream.error(e)
