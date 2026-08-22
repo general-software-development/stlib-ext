@@ -28,3 +28,6 @@ All documentation is at: [GitHub-Pages/General-Software-Development/stlib-ext](h
 ## Support
 
 For inquiries, contact us at github.34373732@gmail.com.
+
+<br>
+<p align="center">&copy; Copyrigh 2026 bogdan-glitchm, Licensed under the <b>MIT License</b></p>
