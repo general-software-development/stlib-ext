@@ -1,3 +1,5 @@
+# TODO: integration with logging.py
+
 import uuid as uuidlib
 from functools import cached_property
 import hashlib
@@ -13,6 +15,7 @@ import sys
 from copy import deepcopy
 from moreshell import shell
 from dataclasses import dataclass
+import traceback
 
 # TODO: Switch to something that lets users add new log levels
 class LogLevel(str, Enum):
@@ -36,6 +39,7 @@ class Log(BaseModel):
     message: str
     objects: Iterable[Any] = tuple()
     lsi: LogStreamInfo
+    exc_info: Optional[Exception]
 
     @field_validator("message")
     @classmethod
@@ -57,6 +61,15 @@ class Log(BaseModel):
         if not value:
             return tuple()
         return tuple(map(lambda x: deepcopy(x), value))
+
+    @field_validator("exc_info")
+    @classmethod
+    def check_exc_info(cls, value: Optional[Exception]) -> Exception | None:
+        if not isinstance(value, BaseException):
+            raise TypeError("exc_info is not of type `Exception`.")
+        if not isinstance(value, Exception):
+            raise TypeError("exc_info cannot be of type `BaseException` (has to be Exception).")
+        return value
 
 class LogHandler(ABC):
     name: str
@@ -135,15 +148,19 @@ class SimpleLogHandler(LogHandler):
 
         super().__init__()
 
-    # TODO: Custom handling for LogLevel.Error and LogLevel.Critical
+    # TODO: Custom handling for LogLevel.Error and LogLevel.Critical when no message
     # TODO: Custom rendering for exceptions
     def format(self, log: Log, lsi: LogStreamInfo) -> str:
-        return f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level)}" \
+        text = f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level)}" \
                 + f"[ {log.level.value.ljust(8, ":")} ]\t    " \
                 + f"{shell.color.STYLE_RESET_ALL}{self.lsi_name_color}{lsi.name}    " \
                 + shell.color.STYLE_RESET_ALL + self.colors.get(log.level) \
                 + f"{log.message} " \
                 + f"{' '.join(map(lambda x: str(x), log.objects))}{shell.color.STYLE_RESET_ALL}"
+
+        err_color = shell.color.STYLE_DIM
+        err = err_color + "\n" + traceback.format_exception(log.exc_info, limit=6).replace("\n", f"    {err_color}# ")
+        return text + err + shell.color.STYLE_RESET_ALL
 
     def commit(self, log: str, logi: Log, lsi: LogStreamInfo) -> None:
         print(
@@ -200,7 +217,8 @@ class LogStream:
         for handler in self.handlers.values():
             handler._push(item)
 
-    def log(self, level: LogLevel, message: str, *objects: Optional[Iterable[Any]]) -> None:
+    def log(self, level: LogLevel, message: str, *objects: Optional[Iterable[Any]],
+            exc_info: Optional[Exception] = None) -> None:
         lsi = LogStreamInfo(name=self.name)
         self._add_item(Log(level=level, message=message, objects=objects or [], lsi=lsi))
 
@@ -225,8 +243,9 @@ class Logger:
     def clear_handlers(self) -> list[LogHandler]:
         self.stream.clear_handlers()
 
-    def log(self, level: LogLevel, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
-        self.stream.log(level, message, *objects)
+    def log(self, level: LogLevel, message: str | Unknown, *objects: Optional[Iterable[Any]],
+            exc_info: Optional[Exception] = None) -> None:
+        self.stream.log(level, message, *objects, exc_info=exc_info)
 
     def debug(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
         self.log(LogLevel.DEBUG, message, *objects)
@@ -240,7 +259,8 @@ class Logger:
     
     
     def error(self, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
-        self.log(LogLevel.ERROR, message, *objects)
+        self.log(LogLevel.ERROR, "" if isinstance(message, BaseException) else message, *objects,
+                 exc_info=message if isinstance(message, BaseException) else None)
     
     @notimplemented
     def critical(self, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
@@ -254,3 +274,4 @@ if __name__ == "__main__":
     stream.log(LogLevel.DEBUG, "Test", "abc", None, {'a': 'bc'})
     stream.log(LogLevel.INFO, "Test", "abc", None, {'a': 'bc'})
     stream.log(LogLevel.CRITICAL, "Test", "abc", None, {'a': 'bc'})
+    stream.error(Exception())
