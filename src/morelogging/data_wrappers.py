@@ -1,11 +1,16 @@
+# Built-in
 from dataclasses import dataclass
 from typing import Any, Optional
 from collections.abc import Iterable
-from pydantic import BaseModel, ConfigDict, field_validator, ValidationInfo
-from .enums import LogLevel
 from copy import deepcopy
 
-@dataclass
+# External
+from pydantic import BaseModel, ConfigDict, field_validator, ValidationInfo
+
+# Relative
+from .enums import LogLevel
+
+@dataclass # TODO: (frozen=True, slots=True)
 class LogStreamInfo:
     name: str
 
@@ -15,17 +20,22 @@ class Log(BaseModel):
     level: LogLevel
     message: str
     objects: Iterable[Any] = tuple()
-    lsi: LogStreamInfo
+    lsi: LogStreamInfo  # you can guess what this stands for
     exc_info: Optional[Exception] = None
 
     @field_validator("message")
     @classmethod
+    # TODO: Remove Exception support from here, i added exc_info
     def check_message(cls, value: str | Any, info: ValidationInfo) -> str:
+        # Is it not a string?
         if not isinstance(value, str):
+            # Is it an Error or a Warning, and is the level ERROR or CRITICAL?
             if isinstance(value, (BaseException, Warning)) and info.data.get("level") in {LogLevel.ERROR, LogLevel.CRITICAL}:
                 pass
             else:
+                # NOT error or critical
                 raise TypeError("Log message is an Exception/Warning, but the log level isnt LogLevel.ERROR or LogLevel.CRITICAL")
+        # It is a string
         else:
             if len(value) == 0:
                 raise ValueError(f"Log message is an empty string ('{value}')")

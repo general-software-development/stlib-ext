@@ -1,12 +1,17 @@
-from moretyping.meta import Unknown
+# Built-in
 from functools import cached_property
 from abc import ABC, abstractmethod
-from .data_wrappers import LogStreamInfo, Log
 import hashlib
 from typing import Any
 import uuid as uuidlib
-from morefunctools import NotImplemented, notimplemented
 import warnings
+
+# stlib-ext
+from moretyping.meta import Unknown
+from morefunctools import NotImplemented, notimplemented
+
+# Relative
+from .data_wrappers import LogStreamInfo, Log
 
 class LogHandler(ABC):
     name: str
@@ -54,6 +59,7 @@ class LogHandler(ABC):
 
         while self._position < len(self._connect_hook) - 1:
             # TODO: Move this and _push code into __internal_push
+            # ^ Note from same person: i forgot why
             self.commit(self.format(self._connect_hook[self._position]))
             self._position += 1
 

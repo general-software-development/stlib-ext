@@ -1,16 +1,21 @@
 # TODO: integration with logging.py
 
-import uuid as uuidlib
+# built-in
 from functools import cached_property
 import hashlib
 import warnings
 from typing import Any, Optional
 from collections.abc import Iterable
+import sys
+import traceback
+import uuid as uuidlib
+
+# stlib-ext
 from morefunctools import notimplemented
 from moretyping.meta import Unknown
-import sys
 from moreshell import shell
-import traceback
+
+# Relative
 from .abstract import LogHandler
 from .enums import LogLevel
 from .data_wrappers import LogStreamInfo, Log
