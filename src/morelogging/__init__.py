@@ -67,6 +67,8 @@ class Log(BaseModel):
     @field_validator("exc_info")
     @classmethod
     def check_exc_info(cls, value: Optional[Exception]) -> Exception | None:
+        if value is None:
+            return value
         if not isinstance(value, BaseException):
             raise TypeError("exc_info is not of type `Exception`.")
         if not isinstance(value, Exception):
@@ -151,7 +153,6 @@ class SimpleLogHandler(LogHandler):
         super().__init__()
 
     # TODO: Custom handling for LogLevel.Error and LogLevel.Critical when no message
-    # TODO: Custom rendering for exceptions
     def format(self, log: Log, lsi: LogStreamInfo) -> str:
         text = f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level)}" \
                 + f"[ {log.level.value.ljust(8, ":")} ]\t    " \
@@ -161,7 +162,11 @@ class SimpleLogHandler(LogHandler):
                 + f"{' '.join(map(lambda x: str(x), log.objects))}{shell.color.STYLE_RESET_ALL}"
 
         err_color = shell.color.STYLE_DIM
-        err = err_color + "\n" + '\n\n'.join(traceback.format_exception(log.exc_info, limit=6)).replace("\n", f"    {err_color}# ")
+        tb = traceback.format_exception(log.exc_info, limit=6)
+        if tb and log.exc_info:
+            err = err_color + f"\n    {err_color}# " + '\n'.join(tb).replace("\n", f"\n    {err_color}# ")
+        else:
+            err = ""
         return text + err + shell.color.STYLE_RESET_ALL
 
     def commit(self, log: str, logi: Log, lsi: LogStreamInfo) -> None:
@@ -222,7 +227,7 @@ class LogStream:
     def log(self, level: LogLevel, message: str, *objects: Optional[Iterable[Any]],
             exc_info: Optional[Exception] = None) -> None:
         lsi = LogStreamInfo(name=self.name)
-        self._add_item(Log(level=level, message=message, objects=objects or [], lsi=lsi))
+        self._add_item(Log(level=level, message=message, objects=objects or [], lsi=lsi, exc_info=exc_info))
 
 class Logger:
     def __init__(self, name: str) -> None:
@@ -268,7 +273,7 @@ class Logger:
     def critical(self, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
         ...
 
-if __name__ == "__main__":
+if True:
     if not __debug__:
         warnings.warn("This is a debug script.")
 
@@ -277,6 +282,8 @@ if __name__ == "__main__":
     stream.log(LogLevel.INFO, "Test", "abc", None, {'a': 'bc'})
     stream.log(LogLevel.CRITICAL, "Test", "abc", None, {'a': 'bc'})
     try:
-        raise Exception('test')
+        def test():
+            raise Exception("test")
+        test()
     except Exception as e:
         stream.error(e)

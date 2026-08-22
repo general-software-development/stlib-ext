@@ -7,9 +7,9 @@ from morefunctools import experimental
 def test(a, **kwargs):
     return 2 + a
 
-@cache.fifo_cache(True)
-def add(a, b):
-    return a + b
+#@cache.fifo_cache(True)
+#def add(a, b):
+#    return a + b
 
 @experimental
 def main():
@@ -32,7 +32,9 @@ def main():
     add(1, 2)
     print(add.cache_info())  
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
 
 # This is a test file. This is not included in the library.
+
+from src import morelogging
