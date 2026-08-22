@@ -16,6 +16,10 @@ Create a PR fixing the issue.
 
 In the PR, add yourself to `.github/CODEOWNERS` for any files you created yourself (this does not apply to modified files). Don't forget to also add your name at the bottom of this file (section 6).
 
+## Writing a PR with AI
+
+While AI-generated PRs are welcome, please first **review the code you are submitting** and **state that it is AI-generated in the PR description**. Don't submit untested, unreviewed AI code or make us guess whether it's AI or not.
+
 # 3. Suggesting a feature
 
 If you have a feature you'd like to get added, [open an issue](https://github.com/cornusandu-org/stlib-ext/issues/new) with more details (such as the feature itself, implementation details, relevant examples, or other similar Issues).
@@ -43,6 +47,10 @@ Use type annotations wherever possible. Example: `collections.abc.Callable`, `ty
 ## 3: Tests
 
 Always write tests for your code. You can run the tests with `scripts/execute.py tests`. This requires Docker. If you don't have Docker installed, you can also run `python -m tests`.
+
+## 4: Large Files
+
+If a file gets too large, consider splitting it into multiple smaller modules. If that's not possible, reconsider whether your code is as readable as you think it is.
 
 # 6. More Information
 
