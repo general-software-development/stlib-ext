@@ -52,7 +52,8 @@ class Logger:
         self.log(LogLevel.ERROR, str(message) if isinstance(message, BaseException) else message, *objects,
                  exc_info=message if isinstance(message, BaseException) else None)
     
-    @notimplemented
+    
     def critical(self, message: str | Unknown, *objects: Optional[Iterable[Any]]) -> None:
-        ...
+        self.log(LogLevel.CRITICAL, str(message) if isinstance(message, BaseException) else message, *objects,
+                 exc_info=message if isinstance(message, BaseException) else None)
     
