@@ -24,7 +24,6 @@ class SimpleLogHandler(LogHandler):
 
         super().__init__()
 
-    # TODO: Custom handling for LogLevel.Error and LogLevel.Critical when no message
     def format(self, log: Log, lsi: LogStreamInfo) -> str:
         text = f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level)}" \
                 + f"[ {log.level.value.ljust(8, ":")} ]\t    " \

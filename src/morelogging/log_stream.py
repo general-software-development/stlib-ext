@@ -28,13 +28,13 @@ class LogStream:
         return hashlib.sha3_512(str((self.name, self.uuid)).encode('utf8')).hexdigest()
 
     def add_handler(self, handler: LogHandler) -> str:
-        handler._connect(self.data)
+        handler._connect([self.data])
         self.handlers[handler.identifier] = handler
         return handler.identifier
 
     def remove_handler(self, handler_id: str) -> LogHandler:
         if h := self.handlers.get(handler_id):
-            h._connect(None)
+            h._connect([None])
             self.handlers.pop(handler_id)
             return h  # same id
         else:

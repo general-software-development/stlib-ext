@@ -20,7 +20,7 @@ class LogHandler(ABC):
     def __init__(self) -> None:
         self.__dict__['name'] = f"<{self.__class__.__name__} instance at 0x{hex(id(self))}>"
         self.__dict__['uuid'] = uuidlib.uuid4().hex
-        self._connect_hook: list[Any] | None = None
+        self._connect_hook: list[list[Any]] | None = None
         self._position = 0
 
         self.auto_run = True
@@ -30,13 +30,12 @@ class LogHandler(ABC):
         return hashlib.sha3_512(str((self.name, self.uuid)).encode('utf8')).hexdigest()
 
     @abstractmethod
-    @notimplemented(NotImplemented.Abstract)
     def format(self, log: Log, lsi: LogStreamInfo) -> str:
-        ...
+        raise NotImplementedError(f"format() is not implemented.")
 
     @abstractmethod
     @notimplemented(NotImplemented.Abstract)
-    def commit(self, log: str, lsi: LogStreamInfo) -> None:
+    def commit(self, log: str, logdata: Log, lsi: LogStreamInfo) -> None:
         ...
 
     @abstractmethod
@@ -53,23 +52,29 @@ class LogHandler(ABC):
         self.close()
 
     def update(self) -> None:
-        if self._connect_hook is None:
+        if self._connect_hook[0] is None:
             warnings.warn("No hook connected (?). Error 0x1")
             return
 
-        while self._position < len(self._connect_hook) - 1:
-            # TODO: Move this and _push code into __internal_push
-            # ^ Note from same person: i forgot why
-            self.commit(self.format(self._connect_hook[self._position]))
+        while self._position < len(self._connect_hook[0]) - 1:
+            self.__internal_push(self._connect_hook[0][self._position])
             self._position += 1
 
     def _push(self, log: Log) -> None:
         if not self.auto_run:
             return
-        self.commit(self.format(log, log.lsi), log, log.lsi)
+        self.__internal_push(log)
+
+    def __internal_push(self, log: Log) -> None:
+        try:
+            formatted = self.format(log, log.lsi)
+        except NotImplementedError:
+            formatted = log.message
+        
+        self.commit(formatted, log, log.lsi)
         self._position += 1
 
-    def _connect(self, data: list[Log]) -> None:
+    def _connect(self, data: list[list[Log]]) -> None:
         self._connect_hook = data
 
     def __setattr__(self, name: str, value: Unknown) -> None:

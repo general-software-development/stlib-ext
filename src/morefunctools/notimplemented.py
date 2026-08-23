@@ -14,11 +14,11 @@ class NotImplemented(Enum):
     Default = auto()
 
 @overload
-def notimplemented(enumtype: NotImplemented = NotImplemented.Default, /, message: Optional[str] = None) -> Callable[[Callable], Callable]:
+def notimplemented[*T, R](enumtype: NotImplemented = NotImplemented.Default, /, message: Optional[str] = None) -> Callable[[Callable[[*T], R]], Callable[[*T], R]]:
     ...
 
 @overload
-def notimplemented(fn: Callable, /) -> Callable:
+def notimplemented[*T, R](fn: Callable[[*T], R], /) -> Callable[[*T], R]:
     ...
 
 def notimplemented(function_or_enumtype: NotImplemented | Callable = NotImplemented.Default, message: Optional[str] = None) -> Callable:
