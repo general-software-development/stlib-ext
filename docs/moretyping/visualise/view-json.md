@@ -4,7 +4,7 @@
 
 ```python
 class ViewJSON(metaclass=VisualiseMeta):
-    def __init__(self, data: Optional[Any] = {}) -> None:
+    def __init__(self, data: Optional[Any] = None) -> None:
         ...
 
     @cached_property

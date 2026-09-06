@@ -4,8 +4,8 @@ from typing import Any, Optional
 import json
 
 class ViewJSON(metaclass=VisualiseMeta):
-    def __init__(self, data: Optional[Any] = {}) -> None:
-        self.data = data
+    def __init__(self, data: Optional[Any] = None) -> None:
+        self.data = data or {}
 
     @cached_property
     def string(self) -> str:
