@@ -5,7 +5,7 @@ import json
 
 class ViewJSON(metaclass=VisualiseMeta):
     def __init__(self, data: Optional[Any] = None) -> None:
-        self.data = data or {}
+        self.data = data if data is not None else {}
 
     @cached_property
     def string(self) -> str:

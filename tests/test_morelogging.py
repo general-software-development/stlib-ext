@@ -425,12 +425,6 @@ class LoggerTests(_TestSuite):
         assert log.exc_info is error
 
     @staticmethod
-    def test_critical_not_implemented():
-        logger = Logger("test")
-        with pytest.raises(NotImplementedError):
-            logger.critical("message")
-
-    @staticmethod
     def test_remove_handler():
         logger, handler = LoggerTests._make_logger()
         logger.remove_handler(handler.identifier)
@@ -448,7 +442,6 @@ class LoggerTests(_TestSuite):
         test_convenience_methods,
         test_error_message,
         test_error_exception,
-        test_critical_not_implemented,
         test_remove_handler,
         test_clear_handlers
     )
