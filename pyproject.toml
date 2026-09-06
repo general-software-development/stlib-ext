@@ -13,6 +13,7 @@ dev = [
     "mypy>=2.2.0",
     "pytest>=9.1.1",
     "colorama>=0.4.6",
+    "complexipy>=8.0.0",
 ]
 github = [
     "mkdocs>=1.6.1",
@@ -30,3 +31,13 @@ module-root = "src"
 
 [tool.pytest.ini_options]
 pythonpath = ["./tests"]
+
+[tool.complexipy]
+paths = ["src"]
+max-complexity-allowed = 10
+exclude = ["tests/**"]
+failed = true
+sort = "desc"
+check-script = true
+cache-dir = ".cache/complexipy_cache"
+suggest-refactors = true

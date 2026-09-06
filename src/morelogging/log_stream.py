@@ -22,6 +22,7 @@ class LogStream:
         self.__dict__["uuid"] = uuidlib.uuid4().hex
         self.data: list[Log] = []
         self.handlers: dict[str, LogHandler] = {}
+        self.logLevel = LogLevel.DEBUG
 
     @cached_property
     def identifier(self) -> str:

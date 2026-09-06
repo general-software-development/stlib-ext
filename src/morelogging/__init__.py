@@ -1,6 +1,6 @@
 # Relative
 from .logger import Logger
-from .enums import LogLevel
+from .enums import LogLevel, LogLevelItem, add_log_level
 from .abstract import LogHandler
 from .log_handlers import SimpleLogHandler
 from .log_stream import LogStream

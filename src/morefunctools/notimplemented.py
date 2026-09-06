@@ -32,16 +32,17 @@ def notimplemented(function_or_enumtype: NotImplemented | Callable = NotImplemen
         function = None
 
     def runBehaviour(fn: Callable, *args: Unknown, **kwargs: Unknown) -> Any:
-        if enumtype is NotImplemented.Abstract:
-            raise NotImplementedError(f"{fn.__qualname__} is an abstract method, and therefore not implemented.")
-        elif enumtype is NotImplemented.Development:
-            warn(f"{fn.__qualname__} is in development, and not yet finished. Expect unfinished or broken behaviour.", NotImplementedWarning)
-        elif enumtype is NotImplemented.Broken:
-            warn(f"{fn.__qualname__} is broken and may not function properly.", NotImplementedWarning)
-        elif enumtype is NotImplemented.Default:
-            raise NotImplementedError(message or f"{fn.__qualname__} is not implemented.")
-        else:
-            raise ValueError()
+        match enumtype:
+            case NotImplemented.Abstract:
+                raise NotImplementedError(f"{fn.__qualname__} is an abstract method, and therefore not implemented.")
+            case NotImplemented.Development:
+                warn(f"{fn.__qualname__} is in development, and not yet finished. Expect unfinished or broken behaviour.", NotImplementedWarning)
+            case NotImplemented.Broken:
+                warn(f"{fn.__qualname__} is broken and may not function properly.", NotImplementedWarning)
+            case NotImplemented.Default:
+                raise NotImplementedError(message or f"{fn.__qualname__} is not implemented.")
+            case _:
+                raise ValueError()  # TODO: Add error text
 
         return fn(*args, **kwargs)
 

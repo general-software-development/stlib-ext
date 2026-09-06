@@ -26,7 +26,7 @@ class SimpleLogHandler(LogHandler):
 
     def format(self, log: Log, lsi: LogStreamInfo) -> str:
         text = f"{shell.color.STYLE_RESET_ALL}{self.colors.get(log.level)}" \
-                + f"[ {log.level.value.ljust(8, ":")} ]\t    " \
+                + f"[ {log.level.name.ljust(8, ":")} ]\t    " \
                 + f"{shell.color.STYLE_RESET_ALL}{self.lsi_name_color}{lsi.name}    " \
                 + shell.color.STYLE_RESET_ALL + self.colors.get(log.level) \
                 + f"{log.message} " \

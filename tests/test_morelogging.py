@@ -28,7 +28,7 @@ class RecordingLogHandler(LogHandler):
     def format(self, log, lsi):
         if self.use_default_format:
             raise NotImplementedError
-        return f"{lsi.name}:{log.level.value}:{log.message}"
+        return f"{lsi.name}:{log.level.name}:{log.message}"
 
     def commit(self, log, logdata, lsi):
         self.commits.append((log, logdata, lsi))
@@ -312,7 +312,7 @@ class SimpleLogHandlerTests(_TestSuite):
 
         formatted = handler.format(log, log.lsi)
 
-        assert level.value in formatted
+        assert level.name in formatted
         assert "stream" in formatted
         assert "hello" in formatted
         assert "world 3" in formatted

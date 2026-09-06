@@ -1,9 +1,23 @@
 from enum import Enum
+from dataclasses import dataclass
+from moretyping.data.mutable_enum import MutableEnum
 
-# TODO: Switch to something that lets users add new log levels
-class LogLevel(str, Enum):
-    DEBUG = "DEBUG"
-    INFO = "INFO"
-    WARNING = "WARNING"
-    ERROR = "ERROR"
-    CRITICAL = "CRITICAL"
+@dataclass
+class LogLevelItem:
+    name: str
+    level: int
+
+    def __hash__(self):
+        return hash((self.name, self.level))
+
+class LogLevel(MutableEnum):
+    ...
+
+def add_log_level(name: str, level: int) -> None:
+    LogLevel.add(name, LogLevelItem(level = level, name = name))
+
+add_log_level("DEBUG", 0)
+add_log_level("INFO", 20)
+add_log_level("WARNING", 40)
+add_log_level("ERROR", 60)
+add_log_level("CRITICAL", 80)
