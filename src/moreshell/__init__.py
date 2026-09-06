@@ -30,4 +30,4 @@ shell.details.ControlSequenceIntroducer = ControlSequenceIntroducer
 
 shell.details.os = details
 
-__all__ = (shell,)
+__all__ = ("shell",)

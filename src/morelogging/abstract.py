@@ -31,7 +31,7 @@ class LogHandler(ABC):
 
     @abstractmethod
     def format(self, log: Log, lsi: LogStreamInfo) -> str:
-        raise NotImplementedError(f"format() is not implemented.")
+        raise NotImplementedError("format() is not implemented.")
 
     @abstractmethod
     @notimplemented(NotImplemented.Abstract)

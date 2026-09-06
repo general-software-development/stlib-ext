@@ -4,7 +4,6 @@ from collections.abc import Iterable
 
 # stlib-ext
 from moretyping.meta import Unknown
-from morefunctools.notimplemented import notimplemented
 
 # Relative
 from .abstract import LogHandler
