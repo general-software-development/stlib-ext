@@ -66,4 +66,4 @@ Available commands:
 
 # 7. Contributors
 
-1. [@cornusandu](https://github.com/cornusandu)
+1. [@bogdan-glitchm](https://github.com/bogdan-glitchm)

@@ -20,6 +20,14 @@ class Logger:
         self.add_handler(default_handler)
 
     @property
+    def logLevel(self) -> LogLevel:
+        return self.stream.logLevel
+
+    @logLevel.setter
+    def logLevel(self, value: LogLevel):
+        self.stream.logLevel = value
+
+    @property
     def identifier(self) -> str:
         return self.stream.identifier
 

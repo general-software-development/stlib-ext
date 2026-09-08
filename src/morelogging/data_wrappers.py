@@ -13,6 +13,7 @@ from .enums import LogLevel
 @dataclass(frozen=True, slots=True)
 class LogStreamInfo:
     name: str
+    logLevel: LogLevel = LogLevel.DEBUG
 
 class Log(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)

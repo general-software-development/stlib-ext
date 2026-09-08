@@ -13,6 +13,7 @@ from .abstract import LogHandler
 from .data_wrappers import Log, LogStreamInfo
 from .enums import LogLevel
 
+
 class LogStream:
     name: str
     uuid: str
@@ -23,6 +24,10 @@ class LogStream:
         self.data: list[Log] = []
         self.handlers: dict[str, LogHandler] = {}
         self.logLevel = LogLevel.DEBUG
+
+    @property
+    def lsi(self) -> LogStreamInfo:
+        return LogStreamInfo(name=self.name, logLevel=self.logLevel)
 
     @cached_property
     def identifier(self) -> str:
@@ -58,6 +63,13 @@ class LogStream:
 
     def log(self, level: LogLevel, message: str, *objects: Optional[Iterable[Any]],
             exc_info: Optional[Exception] = None) -> None:
-        lsi = LogStreamInfo(name=self.name)
-        self._add_item(Log(level=level, message=message, objects=objects or [], lsi=lsi, exc_info=exc_info))
+        self._add_item(
+            Log(
+                level = level,
+                message = message,
+                objects = objects or [],
+                lsi = self.lsi,
+                exc_info = exc_info
+            )
+        )
     

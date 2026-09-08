@@ -13,6 +13,7 @@ from morefunctools import NotImplemented, notimplemented
 # Relative
 from .data_wrappers import LogStreamInfo, Log
 
+
 class LogHandler(ABC):
     name: str
     uuid: str
@@ -48,6 +49,9 @@ class LogHandler(ABC):
     def close(self) -> None:
         ...
 
+    def filter(self, log: Log, lsi: LogStreamInfo) -> bool:
+        return log.level.value.level < lsi.logLevel.value.level
+
     def __del__(self):
         self.close()
 
@@ -66,6 +70,14 @@ class LogHandler(ABC):
         self.__internal_push(log)
 
     def __internal_push(self, log: Log) -> None:
+        try:
+            is_filtered = self.filter(log, log.lsi)
+        except NotImplementedError:
+            is_filtered = False
+
+        if is_filtered:
+            return
+
         try:
             formatted = self.format(log, log.lsi)
         except NotImplementedError:

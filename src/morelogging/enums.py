@@ -10,8 +10,12 @@ class LogLevelItem:
     def __hash__(self):
         return hash((self.name, self.level))
 
-class LogLevel(MutableEnum):
-    ...
+class LogLevel(MutableEnum[LogLevelItem]):
+    DEBUG = None
+    INFO = None
+    WARNING = None
+    ERROR = None
+    CRITICAL = None
 
 def add_log_level(name: str, level: int) -> None:
     LogLevel.add(name, LogLevelItem(level = level, name = name))

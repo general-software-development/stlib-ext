@@ -14,6 +14,7 @@ if True:
         warnings.warn("This is a debug script.")
 
     stream = Logger("TestLogger")
+    stream.logLevel = LogLevel.DEBUG
     stream.log(LogLevel.DEBUG, "Test", "abc", None, {'a': 'bc'})
     stream.log(LogLevel.INFO, "Test", "abc", None, {'a': 'bc'})
     stream.log(LogLevel.CRITICAL, "Test", "abc", None, {'a': 'bc'})
@@ -28,7 +29,7 @@ if True:
     logging_logger = logging.getLogger("testLogger-logging")
     logging_logger.propagate = False
     logging_logger.setLevel(logging.DEBUG)
-    logging_logger.addHandler(compat.handler_as_stlib_handler(SimpleLogHandler(), data_wrappers.LogStreamInfo(name="FakeTestLogger")))
+    logging_logger.addHandler(compat.handler_as_stlib_handler(SimpleLogHandler(), data_wrappers.LogStreamInfo(name="FakeTestLogger", logLevel=LogLevel.DEBUG)))
     logging_logger.info("stuff %s %s", "test", "stuff")
 
     reverse_logger = compat.stlib_logger_as_logger(logging.root)
