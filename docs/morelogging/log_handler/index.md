@@ -73,7 +73,6 @@ class LogHandler(ABC):
 
 * `auto_run: bool = True`
 : Whether the Log Handler should automatically process logs the second they are made.
-:
 : If this is disabled, the log handler instance will only process new logs when calling `.update()`
 
 * `identifier: str`
@@ -86,7 +85,6 @@ class LogHandler(ABC):
 
 * `update(self) -> None`
 : If `auto_run` is disabled, this will make the log handler process any new log entries.
-:
 : If `auto_run` is enabled, this will do nothing.
 
 ## Abstract Methods

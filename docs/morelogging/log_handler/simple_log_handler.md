@@ -66,7 +66,6 @@ class SimpleLogHandler(LogHandler):
 
 * `auto_run: bool = True` (Inherited from [LogHandler](./index.md))
 : Whether the Log Handler should automatically process logs the second they are made.
-:
 : If this is disabled, the log handler instance will only process new logs when calling `.update()`
 
 * `identifier: str` (Inherited from [LogHandler](./index.md))

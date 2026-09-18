@@ -1,7 +1,9 @@
 # stlib-ext
+
 > A pythonic extension for the standard library.
 
 ## Includes
+
 1. [**moretyping**](./moretyping/index.md)
 : **MoreTyping** adds plenty more python types, for both type annotations *and* real-world use.
 
@@ -13,3 +15,6 @@
 
 4. [**os_ext**](./os_ext/index.md)
 : **OS_Ext** provides various OS-related utilities on top of `os`.
+
+5. [**morelogging**](./morelogging/index.md)
+: **morelogging** is an independent logging library designed to be an alternative to `logging`, while also offering interoperability and connectivity with `logging`.
