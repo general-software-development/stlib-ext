@@ -1,6 +1,7 @@
 # morelogging.Logger
 
 ## Annotations
+
 ```python
 class Logger:
     def __init__(self, name: str) -> None:
@@ -43,6 +44,7 @@ class Logger:
 ```
 
 ## Properties
+
 `name: str`
 : The name associated with the logger
 
@@ -55,39 +57,44 @@ class Logger:
 ## Methods
 
 ### add_handler
+
 ```python
 def add_handler(self, handler: LogHandler) -> str:
     ...
 ```
 
-Same as [`LogStream.add_handler`](./missing).
+Same as [`LogStream.add_handler`](../log_stream/index.md).
 
 ### remove_handler
+
 ```python
 def remove_handler(self, handler_id: str) -> LogHandler:
     ...
 ```
 
-Same as [`LogStream.remove_handler`](./missing).
+Same as [`LogStream.remove_handler`](../log_stream/index.md).
 
 ### clear_handlers
+
 ```python
 def clear_handlers(self) -> list[LogHandler]:
     ...
 ```
 
-Same as [`LogStream.clear_handlers`](./missing).
+Same as [`LogStream.clear_handlers`](../log_stream/index.md).
 
 ### log
+
 ```python
 def log(self, level: LogLevel, message: str | Unknown, *objects: Optional[Iterable[Any]],
         exc_info: Optional[Exception] = None) -> None:
     ...
 ```
 
-Same as [`LogStream.log`](./missing).
+Same as [`LogStream.log`](../log_stream/index.md).
 
 ### debug
+
 ```python
 def debug(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
     ...
@@ -96,6 +103,7 @@ def debug(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
 Prints a `debug` level log. Objects are concatenated at the end of the message.
 
 ### info
+
 ```python
 def info(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
     ...
@@ -104,6 +112,7 @@ def info(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
 Prints a `info` level log. Objects are concatenated at the end of the message.
 
 ### warning
+
 ```python
 def warning(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
     ...
@@ -112,6 +121,7 @@ def warning(self, message: str, *objects: Optional[Iterable[Any]]) -> None:
 Prints a `warning` level log. Objects are concatenated at the end of the message.
 
 ### error
+
 ```python
 def error(self, message: str | Exception | Unknown, *objects: Optional[Iterable[Any]]) -> None:
     ...
@@ -120,6 +130,7 @@ def error(self, message: str | Exception | Unknown, *objects: Optional[Iterable[
 Prints a `error` level log. Objects are concatenated at the end of the message.
 
 ### critical
+
 ```python
 def critical(self, message: str | Exception | Unknown, *objects: Optional[Iterable[Any]]) -> None:
     ...

@@ -1,13 +1,11 @@
-from dataclasses import dataclass
+# morelogging.LogLevel
+
+## Annotations
+```python
 from moretyping.data.mutable_enum import MutableEnum
 
-@dataclass
 class LogLevelItem:
-    name: str
-    level: int
-
-    def __hash__(self):
-        return hash((self.name, self.level))
+    ...
 
 class LogLevel(MutableEnum[LogLevelItem]):
     DEBUG = None
@@ -24,3 +22,16 @@ add_log_level("INFO", 20)
 add_log_level("WARNING", 40)
 add_log_level("ERROR", 60)
 add_log_level("CRITICAL", 80)
+```
+
+## Properties
+
+* `DEBUG`: log level 0
+* `INFO`: log level 20
+* `WARNING`: log level 40
+* `ERROR`: log level 60
+* `CRITICAL`: log level 80
+
+## Adding a log level
+
+To add a log level, use the `add_log_level` function.

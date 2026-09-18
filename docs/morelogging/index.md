@@ -2,22 +2,23 @@
 > Both a replacement and extension of the standard logging library
 
 ## Summary
+
 1. [`Logger`](./logger/index.md)
 : The user-facing API intended to be used for logging.
 
-2. `LogStream`
+2. [`LogStream`](./log_stream/index.md)
 : A lower-level but still easily usable logging class, standing as the backend for `Logger`
 
-3. `LogHandler`
+3. [`LogHandler`](./log_handler/index.md)
 : The abstract class for log handlers
 
-4. `LogLevel`
+4. [`LogLevel`](./loglevel/index.md)
 : The enum class for log levels
 
-5. `SimpleLogHandler`
+5. [`SimpleLogHandler`](./log_handler/simple_log_handler.md)
 : The default log handler for all `Logger` instances &mdash; a premade implementation of a handler and formatter, featuring automatic log colouring and nice formatting
 
-6. `data_wrappers`
+6. [`data_wrappers`](./data_wrappers/index.md)
 : The internal classes used purely to hold or organise data
 
 7. `compat`

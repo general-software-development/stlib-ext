@@ -39,8 +39,8 @@ class LogHandler(ABC):
     def commit(self, log: str, logdata: Log, lsi: LogStreamInfo) -> None:
         ...
 
-    @abstractmethod
-    @notimplemented(NotImplemented.Abstract)
+    #@abstractmethod
+    #@notimplemented(NotImplemented.Abstract)
     def open(self) -> None:
         ...
 
