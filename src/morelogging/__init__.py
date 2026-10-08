@@ -7,7 +7,7 @@ from .log_stream import LogStream
 from . import data_wrappers
 from . import compat
 
-if True:
+def __internal_test():
     import warnings
 
     if not __debug__:

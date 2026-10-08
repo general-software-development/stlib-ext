@@ -38,3 +38,5 @@ def main():
 # This is a test file. This is not included in the library.
 
 from src import morelogging
+
+#morelogging.__internal_test()
