@@ -1,4 +1,4 @@
-# moretyping.data.Number
+# moretyping.data.MutableENum
 
 ## Annotations
 
