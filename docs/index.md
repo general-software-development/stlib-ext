@@ -2,6 +2,26 @@
 
 > A pythonic extension for the standard library.
 
+## Installation
+
+### Latest
+
+```bash
+pip install stlib-ext
+```
+
+### Stable
+
+```bash
+pip install stlib-ext[stable]
+```
+
+### Compatibility Version
+
+```bash
+pip install stlib-ext[compat]
+```
+
 ## Includes
 
 1. [**moretyping**](./moretyping/index.md)

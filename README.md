@@ -3,6 +3,26 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0cec24c0408944d294b4d6a227da9457)](https://app.codacy.com/gh/general-software-development/stlib-ext/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![GitHub Repo](https://img.shields.io/badge/github-stlib--ext-blue?logo=github)](https://github.com/general-software-development/stlib-ext) [![PyPI Package](https://img.shields.io/badge/pypi-stlib--ext-blue?logo=pypi)](https://pypi.org/project/stlib-ext/)
 
+## Installation
+
+### Latest
+
+```bash
+pip install stlib-ext
+```
+
+### Stable
+
+```bash
+pip install stlib-ext[stable]
+```
+
+### Compatibility Version
+
+```bash
+pip install stlib-ext[compat]
+```
+
 ## Contents
 
 1. **MoreTyping**
