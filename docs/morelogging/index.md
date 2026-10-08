@@ -21,5 +21,5 @@
 6. [`data_wrappers`](./data_wrappers/index.md)
 : The internal classes used purely to hold or organise data
 
-7. `compat`
+7. [`compat`](./compat/index.md)
 : A compatibility module, for integration with the standard library `logging` library

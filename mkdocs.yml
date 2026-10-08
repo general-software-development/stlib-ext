@@ -82,3 +82,4 @@ nav:
       - morelogging.SimpleLogHandler: morelogging/log_handler/simple_log_handler.md
       - morelogging.LogStream: morelogging/log_stream/index.md
       - morelogging.Logger: morelogging/logger/index.md
+      - morelogging.compat: morelogging/compat/index.md
