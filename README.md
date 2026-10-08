@@ -19,7 +19,11 @@
 
 4. **OS_Ext**
 
-&emsp; **OS_Ext** provides various OS-related utilities on top of `os`.
+&emsp; **OS_Ext** provides various OS-related utilities on top of `os`. <br><br>
+
+5. **morelogging**
+
+&emsp; **morelogging** is an independent logging library designed to be an alternative to `logging`, while also offering interoperability and connectivity with `logging`.
 
 ## Documentation
 
@@ -30,4 +34,5 @@ All documentation is at: [GitHub-Pages/General-Software-Development/stlib-ext](h
 For inquiries, contact us at github.34373732@gmail.com.
 
 <br>
-<p align="center">&copy; Copyrigh 2026 bogdan-glitchm, Licensed under the <b>MIT License</b></p>
+<p align="center">This library is still under active development and may be updated at any time.</p>
+<p align="center">&copy; Copyright 2026 bogdan-glitchm, Licensed under the <b>MIT License</b>.</p>
