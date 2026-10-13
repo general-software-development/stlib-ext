@@ -2,6 +2,7 @@ from moretyping import vis
 from moretyping import data
 from morefunctools import cache
 from morefunctools import experimental
+from moremath import Equation, SquareRoot, Root
 
 @cache.fifo_cache(1)
 def test(a, **kwargs):
@@ -29,11 +30,20 @@ def main():
     print(test(2))
     print(test(1))
 
+    eq = Equation(2) * 2 + 3 - 1
+    print(eq)
+    print(eq.resolve())
+    print(SquareRoot(-4))
+    print(SquareRoot(-3))
+    print(Root(-8, 3))
+    print(2 * SquareRoot(3) + 5 - 1 + 2)
+    print((2 * SquareRoot(3) + 5 - 1 + 2).resolve())
+
     add(1, 2)
     print(add.cache_info())  
 
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()
 
 # This is a test file. This is not included in the library.
 
